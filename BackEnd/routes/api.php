@@ -36,6 +36,7 @@ Route::get('/brands', [BrandController::class, 'index']);
 
 
 // Route::get('/orders', [OrderController::class, 'index']);
+Route::put('/products/{id}', [ProductController::class, 'update']);
 
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/profile', [AuthController::class, 'profile']);
@@ -44,12 +45,11 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::post('/orders', [OrderController::class, 'store']);
-    //  Route::put('/products/{id}', [ProductController::class, 'store']);
+
+    Route::post('/products', [ProductController::class, 'store']);
 
     // Admin only
     Route::middleware('admin')->group(function () {
-        Route::apiResource('/brands', BrandController::class);
-        // Route::apiResource('/products', ProductController::class);
     });
 
 

@@ -18,6 +18,11 @@ class Product extends Model
         'image_url',
     ];
 
+     public function getImageUrlAttribute($value)
+    {
+        return $value ? url($value) : null;
+    }
+
     // Relationship
     public function brand ():BelongsTo{
         return $this->belongsTo(Brand::class);

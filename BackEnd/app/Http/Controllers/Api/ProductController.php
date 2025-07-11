@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -17,9 +18,11 @@ class ProductController extends Controller
     {
         $products = Product::with('brand')->latest()->get();
         $products->transform(function ($product) {
+            /** @var \App\Models\Product $product */
             $product->image_url = $product->image_url ? url($product->image_url) : null;
             return $product;
         });
+
 
          return response()->json($products);
     }
@@ -91,12 +94,14 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // Find the product
         $product = Product::find($id);
 
         if (!$product) {
             return response()->json(['message' => 'Product not found.'], 404);
         }
 
+        // Validate the request
         $validator = Validator::make($request->all(), [
             'brand_id' => 'required|exists:brands,id',
             'name' => 'required|string|max:255',
@@ -110,23 +115,26 @@ class ProductController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Upload new image if provided
+        // Prepare data for update
+        $data = $request->only(['brand_id', 'name', 'content', 'price', 'ram']);
+
+        // Handle image upload
         if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($product->image_url) {
+                Storage::delete(str_replace('storage/', 'public/', $product->image_url));
+            }
+
             $file = $request->file('image');
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/products', $filename);
-            $product->image_url = 'storage/products/' . $filename;
+            $data['image_url'] = 'storage/products/' . $filename;
         }
 
-        // Update other fields
-        $product->brand_id = $request->brand_id;
-        $product->name = $request->name;
-        $product->content = $request->content;
-        $product->price = $request->price;
-        $product->ram = $request->ram;
+        // Update the product using mass assignment
+        $product->update($data);
 
-        $product->save();
-
+        // Return the updated product
         return response()->json([
             'message' => 'Product updated successfully.',
             'product' => [
