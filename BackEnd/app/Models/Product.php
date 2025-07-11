@@ -14,6 +14,7 @@ class Product extends Model
         'content',
         'price',
         'ram',
+        'brand_id',
         'image_url',
     ];
 

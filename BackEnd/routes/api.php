@@ -26,29 +26,39 @@ Route::post('/login', [AuthController::class, 'login']);
 //     return $request->user();
 // });
 
+
+Route::get('/cart', [CartController::class, 'index']);
+Route::post('/cart/add', [CartController::class, 'add']);
+
+// Shared
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/brands', [BrandController::class, 'index']);
+
+
+// Route::get('/orders', [OrderController::class, 'index']);
+
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::put('/profile/{id}', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::post('/orders', [OrderController::class, 'store']);
+    //  Route::put('/products/{id}', [ProductController::class, 'store']);
 
     // Admin only
     Route::middleware('admin')->group(function () {
         Route::apiResource('/brands', BrandController::class);
-        Route::apiResource('/products', ProductController::class);
+        // Route::apiResource('/products', ProductController::class);
     });
 
-    // Shared
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/brands', [BrandController::class, 'index']);
 
     // Cart
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart/add', [CartController::class, 'add']);
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove']);
 
     // Order
     Route::post('/orders', [OrderController::class, 'store']);
-    Route::get('/orders', [OrderController::class, 'index']);
+
 });
 
 // Fall back

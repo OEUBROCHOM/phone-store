@@ -319,6 +319,7 @@
   import * as am5map from "@amcharts/amcharts5/map";
   import am5geodata_cambodiaLow from "@amcharts/amcharts5-geodata/cambodiaLow";
   import "@amcharts/amcharts5/themes/Animated";
+  import api from '@/api';
 
   Chart.register(...registerables);
 

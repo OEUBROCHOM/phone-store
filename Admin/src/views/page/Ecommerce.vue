@@ -40,7 +40,7 @@
         </div>
         <div class="product-section flex flex-wrap justify-center gap-6">
             <div v-for="product in products" :key="product.name" class="product bg-white p-4 rounded-lg shadow-md w-48 text-center relative">
-                <img :src="product.imageUrl" :alt="product.name" class="w-full h-48 object-cover" />
+                <img :src="product.image_url" :alt="product.name" class="w-full h-48 object-cover" />
                 <p class="mt-2 text-sm text-gray-700">{{ product.name }}</p>
                 <p class="text-sm text-gray-600">{{ product.content }}</p>
                 <p class="text-lg font-bold text-gray-900">{{ product.price }}</p>
@@ -64,8 +64,35 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted} from 'vue';
+import api from '@/api';
 
+//Integrat api
+// const products = ref([])
+// Fetch Product
+// const fetchProducts = async () => {
+//   try {
+//     const res = await api.get('/products')
+//     products.value = res.data.data
+//     console.log(products)
+//   } catch (error) {
+//     console.error('Failed to load product:', error)
+//   }
+// }
+import axios from 'axios';
+const products = ref([])
+axios.get('http://127.0.0.1:8000/api/products')
+  .then(response => {
+    console.log('Products:', response.data);
+    products.value = response.data
+  })
+  .catch(error => {
+    console.error('API Error:', error);
+  });
+
+
+
+// Select brand
 const selectedBrand = ref('');
 const brands = ref([
   { name: 'Apple', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' },
@@ -102,15 +129,15 @@ const brands = ref([
   { name: 'Remax', imageUrl: 'https://via.placeholder.com/50' }, // Placeholder, replace with actual URL
 ]);
 
-const products = ref([
-  { name: 'Mac Mini', content: 'Apple Mac Mini M4', price: '$699 - $619', ram: '256G-16G (Off-70S)', imageUrl: 'https://i.pinimg.com/1200x/6b/d4/d4/6bd4d445b8311b60ca63f81eb2c1cfee.jpg' },
-  { name: 'iPhone 16 Pro', content: 'iPhone 16 Pro Falcon', price: '$1,545 - $1,219', ram: 'Best Seller', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
-  { name: 'iPhone 16', content: 'iPhone 16 (Offer)', price: '$1,269 - $1,039', ram: '200G', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
-  { name: 'iPhone 16 Pro Max', content: 'iPhone 16 Pro Max SIM2', price: '$1,279', ram: '(New Offer)', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
-  { name: 'iPhone 16 Pro', content: 'iPhone 16 Pro 16', price: '$929', ram: 'Max CH/A SIM2 (New Offer)', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
-  { name: 'iPhone 16', content: 'iPhone 16 Pro Max (USA)', price: '$1,169 - $1,089', ram: 'LL/A 2-eSIMs', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
-  { name: 'Huawei Watch FIT 4 Pro', content: 'Fashion Active', price: '$279', ram: '200G', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
-]);
+// const products = ref([
+//   { name: 'Mac Mini', content: 'Apple Mac Mini M4', price: '$699 - $619', ram: '256G-16G (Off-70S)', imageUrl: 'https://i.pinimg.com/1200x/6b/d4/d4/6bd4d445b8311b60ca63f81eb2c1cfee.jpg' },
+//   { name: 'iPhone 16 Pro', content: 'iPhone 16 Pro Falcon', price: '$1,545 - $1,219', ram: 'Best Seller', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
+//   { name: 'iPhone 16', content: 'iPhone 16 (Offer)', price: '$1,269 - $1,039', ram: '200G', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
+//   { name: 'iPhone 16 Pro Max', content: 'iPhone 16 Pro Max SIM2', price: '$1,279', ram: '(New Offer)', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
+//   { name: 'iPhone 16 Pro', content: 'iPhone 16 Pro 16', price: '$929', ram: 'Max CH/A SIM2 (New Offer)', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
+//   { name: 'iPhone 16', content: 'iPhone 16 Pro Max (USA)', price: '$1,169 - $1,089', ram: 'LL/A 2-eSIMs', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
+//   { name: 'Huawei Watch FIT 4 Pro', content: 'Fashion Active', price: '$279', ram: '200G', imageUrl: 'https://i.pinimg.com/736x/b3/e6/ae/b3e6aeaa47709e1e4d23a7b2776b9b12.jpg' },
+// ]);
 
 const selectBrand = (brand) => {
   selectedBrand.value = brand;

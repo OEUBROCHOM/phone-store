@@ -9,10 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Brand extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'name',
-        'image_url',
-    ];
+    protected $fillable = ['name', 'image_url'];
 
     // Relationship
     public function products():HasMany {
