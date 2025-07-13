@@ -33,10 +33,12 @@ Route::post('/cart/add', [CartController::class, 'add']);
 // Shared
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/brands', [BrandController::class, 'index']);
-
+Route::post('/brands', [BrandController::class, 'store']);
+Route::post('/products', [ProductController::class, 'store']);
 
 // Route::get('/orders', [OrderController::class, 'index']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
+Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/profile', [AuthController::class, 'profile']);
@@ -46,7 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::post('/orders', [OrderController::class, 'store']);
 
-    Route::post('/products', [ProductController::class, 'store']);
+
 
     // Admin only
     Route::middleware('admin')->group(function () {

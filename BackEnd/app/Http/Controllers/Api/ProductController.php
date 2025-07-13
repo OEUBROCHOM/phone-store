@@ -17,11 +17,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('brand')->latest()->get();
-        $products->transform(function ($product) {
-            /** @var \App\Models\Product $product */
-            $product->image_url = $product->image_url ? url($product->image_url) : null;
-            return $product;
-        });
+        return $products;
 
 
          return response()->json($products);
@@ -157,6 +153,9 @@ class ProductController extends Controller
         $product = Product::find($id);
         if (!$product) {
             return response()->json(['message' => 'Product not found.'], 404);
+        }
+        if ($product->image_url) {
+            Storage::delete(str_replace('storage/', 'public/', $product->image_url));
         }
 
         $product->delete();
