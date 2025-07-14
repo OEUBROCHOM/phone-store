@@ -9,8 +9,8 @@
         <ul class="space-y-2">
           <li><router-link to="/" v-slot="{ isActive }" :class="['flex items-center p-2 rounded-lg transition', isActive ? 'text-indigo-600 bg-gray-100' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-100']" ><span class="mr-2">🏠</span> Home</router-link></li>
           <li><router-link to="/ecommerce" class="text-gray-600 hover:text-indigo-600 flex items-center p-2 rounded-lg hover:bg-gray-100"><span class="mr-2">📱</span> eCommerce</router-link></li>
-          <li><router-link class="text-gray-600 hover:text-indigo-600 flex items-center p-2 rounded-lg hover:bg-gray-100"><span class="mr-2">👤</span> Contacts</router-link></li>
-          <li><router-link class="text-gray-600 hover:text-indigo-600 flex items-center p-2 rounded-lg hover:bg-gray-100"><span class="mr-2">💬</span> Chats</router-link></li>
+          <li><router-link to="/users" class="text-gray-600 hover:text-indigo-600 flex items-center p-2 rounded-lg hover:bg-gray-100"><span class="mr-2">👤</span> Mange Users</router-link></li>
+          <li><router-link to="/chats" class="text-gray-600 hover:text-indigo-600 flex items-center p-2 rounded-lg hover:bg-gray-100"><span class="mr-2">💬</span> Chats</router-link></li>
           <li><router-link class="text-gray-600 hover:text-indigo-600 flex items-center p-2 rounded-lg hover:bg-gray-100"><span class="mr-2">📅</span> Calendar</router-link></li>
           <li><router-link class="text-gray-600 hover:text-indigo-600 flex items-center p-2 rounded-lg hover:bg-gray-100"><span class="mr-2">🎫</span> Tickets</router-link></li>
           <!-- Add more links here -->

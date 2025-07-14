@@ -1,1 +1,4 @@
 @import "tailwindcss";
+ [class*="vue-devtools"] {
+    display: none !important;
+  }

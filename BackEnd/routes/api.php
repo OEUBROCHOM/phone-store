@@ -35,6 +35,7 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/brands', [BrandController::class, 'index']);
 Route::post('/brands', [BrandController::class, 'store']);
 Route::post('/products', [ProductController::class, 'store']);
+Route::put('/brands/{id}', [BrandController::class, 'update']);
 
 // Route::get('/orders', [OrderController::class, 'index']);
 Route::put('/products/{id}', [ProductController::class, 'update']);

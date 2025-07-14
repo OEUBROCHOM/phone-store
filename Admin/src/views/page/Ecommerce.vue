@@ -1,14 +1,14 @@
 <template>
-  <div class="ecommerce-page bg-gray-100 h-100 p-6 rounded-lg overflow-y-auto;" style="max-height: calc(100vh - 64px);">
+  <div class="ecommerce-page bg-gray-100 h-full p-6 rounded-lg overflow-y-auto" :style="{ maxHeight: `calc(100vh - ${headerHeight}px)` }">
     <div class="header text-center mb-6">
       <nav class="text-gray-700 flex justify-between items-center">
         <h1 class="mx-2 hover:text-blue-500" style="font-size: 1.5rem; font-weight: bold;">Brands</h1>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">+Add Brand</button>
+        <button @click="openCreateBrand" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">+Add Brand</button>
       </nav>
     </div>
     <div class="brand-section flex flex-nowrap justify-start gap-4 mb-6 overflow-x-auto scrollbar-hide" style="-ms-overflow-style: none; scrollbar-width: none;">
       <div v-for="brand in brands" :key="brand.name" class="brand flex-shrink-0 flex flex-col items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg cursor-pointer transition-shadow" @click="selectBrand(brand.name)">
-        <img :src="brand.image_url" :alt="brand.name" class="w-12 h-12" />
+        <img :src="brand.image_url" :alt="brand.name" class="w-12 h-12 rounded" />
         <span class="mt-2 text-sm text-gray-700">{{ brand.name }}</span>
       </div>
     </div>
@@ -31,18 +31,18 @@
       <button class="px-4 py-2 bg-white rounded hover:bg-gray-100 text-sm text-gray-700">Other Case</button>
       <button class="px-4 py-2 bg-white rounded hover:bg-gray-100 text-sm text-gray-700">Headphone</button>
     </div>
-    <div class="bg-gray-100 pb-20 rounded-lg" style="width: 100%;">
-      <div class="header text-center mb-4 mt-20 p-6">
+    <div class="bg-gray-200 pb-20 rounded-lg" style="width: 100%;">
+      <div class="header text-center mb-4 mt-20">
         <nav class="text-gray-700 flex justify-between items-center">
           <h1 class="mx-2 hover:text-blue-500" style="font-size: 1.5rem; font-weight: bold;">Products</h1>
           <button @click="openCreateModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">+Add Product</button>
         </nav>
       </div>
       <div class="product-section flex flex-wrap justify-center gap-6">
-        <div v-for="product in products" :key="product.id" class="product bg-white p-4 rounded-lg shadow-md w-48 text-center relative ">
-          <img :src="product.image_url" :alt="product.name" class="w-full h-48 object-cover" />
+        <div v-for="product in products" :key="product.id" class="product bg-white p-4 rounded-lg shadow-md w-48 text-center relative">
+          <img :src="product.image_url" :alt="product.name" class="w-full h-48 object-cover rounded" />
           <p class="mt-2 text-sm text-gray-700">{{ product.name }}</p>
-          <p class="text-sm text-gray-600 ">{{ product.content }}</p>
+          <p class="text-sm text-gray-600">{{ product.content }}</p>
           <p class="text-lg font-bold text-gray-900">{{ product.price }}</p>
           <p class="text-xs text-gray-500">{{ product.ram }}</p>
           <div class="flex justify-center gap-2 mt-2">
@@ -62,137 +62,207 @@
     </div>
 
     <!-- Edit Modal Form -->
-    <div v-if="showEditModal" class="fixed inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-50 p-4 sm:p-6">
-      <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 opacity-100 ease-out">
-        <h2 class="text-2xl font-extrabold text-gray-900 mb-6 border-b pb-4 border-gray-200">Edit Products</h2>
-        <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg border border-red-200 flex items-center gap-2">
-          <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-          </svg>
-          <span>{{ errorMessage }}</span>
+    <transition name="fade-slide" appear mode="out-in">
+      <div v-if="showEditModal" class="fixed inset-0 bg-blue-100 bg-opacity-75 flex items-center justify-center z-50 p-4 sm:p-6">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 opacity-100 ease-out">
+          <h2 class="text-2xl font-extrabold text-gray-900 mb-6 border-b pb-4 border-gray-200">Edit Products</h2>
+          <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg border border-red-200 flex items-center gap-2">
+            <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </div>
+          <div v-if="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg border border-green-200 flex items-center gap-2">
+            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>{{ successMessage }}</span>
+          </div>
+          <form @submit.prevent="updateProduct" enctype="multipart/form-data" class="space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input id="name" v-model="editForm.name" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
+              </div>
+              <div>
+                <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                <input id="price" v-model="editForm.price" type="number" step="0.01" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
+              </div>
+            </div>
+            <div>
+              <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+              <textarea id="content" v-model="editForm.content" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="ram" class="block text-sm font-medium text-gray-700 mb-1">RAM</label>
+                <input id="ram" v-model="editForm.ram" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              </div>
+              <div>
+                <label for="brand" class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                <select id="brand" v-model="editForm.brand_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                  <option value="" disabled>Select a brand</option>
+                  <option v-for="brand in brands" :key="brand.name" :value="brand.id">{{ brand.name }}</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+              <div class="flex items-center space-x-4">
+                <input type="file" accept="image/jpeg,image/png" @change="handleFileChange" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                <img v-if="editForm.image_url" :src="editForm.image_url" class="w-20 h-20 object-cover rounded-lg shadow-md" alt="Product Image" />
+              </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <button type="button" @click="closeEditModal" class="inline-flex items-center px-5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-red-200 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                Cancel
+              </button>
+              <button type="submit" :disabled="isSaving" class="inline-flex items-center justify-center px-6 py-2.5 border border-transparent shadow-md text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none">
+                <template v-if="isSaving">
+                  <svg class="animate-spin-slow h-5 w-5 text-white border-opacity-50 border-t-transparent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-75" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  <span class="ml-2 text-white transition-opacity duration-300 opacity-100">Saving...</span>
+                </template>
+                <template v-else>
+                  <span class="transition-opacity duration-300 opacity-100">Save Changes</span>
+                </template>
+              </button>
+            </div>
+          </form>
         </div>
-        <div v-if="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg border border-green-200 flex items-center gap-2">
-          <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-          </svg>
-          <span>{{ successMessage }}</span>
-        </div>
-        <form @submit.prevent="updateProduct" enctype="multipart/form-data" class="space-y-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input id="name" v-model="editForm.name" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
-            </div>
-            <div>
-              <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-              <input id="price" v-model="editForm.price" type="number" step="0.01" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
-            </div>
-          </div>
-
-          <div>
-            <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <textarea id="content" v-model="editForm.content" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label for="ram" class="block text-sm font-medium text-gray-700 mb-1">RAM</label>
-              <input id="ram" v-model="editForm.ram" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-            </div>
-            <div>
-              <label for="brand" class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-              <select id="brand" v-model="editForm.brand_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                <option value="" disabled>Select a brand</option>
-                <option v-for="brand in brands" :key="brand.name" :value="brand.id">{{ brand.name }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-            <div class="flex items-center space-x-4">
-              <input type="file" accept="image/jpeg,image/png" @change="handleFileChange" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-              <img v-if="editForm.image_url" :src="editForm.image_url" class="w-20 h-20 object-cover rounded-lg shadow-md" alt="Product Image" />
-            </div>
-          </div>
-
-          <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-            <button type="button" @click="closeEditModal" class="inline-flex items-center px-5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-red-200 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-              Cancel
-            </button>
-            <button type="submit" class="inline-flex items-center px-5 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-              Save Changes
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
+    </transition>
 
-
-    <!-- Create Products form -->
-    <div v-if="showCreateModal" class="fixed inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-50 p-4 sm:p-6">
-      <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 opacity-100 ease-out">
-        <h2 class="text-2xl font-extrabold text-gray-900 mb-6 border-b pb-4 border-gray-200">Create Product</h2>
-        <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg border border-red-200 flex items-center gap-2">
-          <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-          </svg>
-          <span>{{ errorMessage }}</span>
+    <!-- Create Products Form -->
+    <transition name="fade-slide" appear mode="out-in">
+      <div v-if="showCreateModal" class="fixed inset-0 bg-blue-100 bg-opacity-75 flex items-center justify-center z-50 p-4 sm:p-6">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 opacity-100 ease-out">
+          <h2 class="text-2xl font-extrabold text-gray-900 mb-6 border-b pb-4 border-gray-200">Create Product</h2>
+          <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg border border-red-200 flex items-center gap-2">
+            <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </div>
+          <div v-if="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg border border-green-200 flex items-center gap-2">
+            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>{{ successMessage }}</span>
+          </div>
+          <form @submit.prevent="createProduct" enctype="multipart/form-data" class="space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="create-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input id="create-name" v-model="createForm.name" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
+              </div>
+              <div>
+                <label for="create-price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                <input id="create-price" v-model="createForm.price" type="number" step="0.01" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
+              </div>
+            </div>
+            <div>
+              <label for="create-content" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+              <textarea id="create-content" v-model="createForm.content" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="create-ram" class="block text-sm font-medium text-gray-700 mb-1">RAM</label>
+                <input id="create-ram" v-model="createForm.ram" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              </div>
+              <div>
+                <label for="create-brand" class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                <select id="create-brand" v-model="createForm.brand_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+                  <option value="" disabled>Select a brand</option>
+                  <option v-for="brand in brands" :key="brand.id" :value="brand.id">{{ brand.name }}</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+              <div class="flex items-center space-x-4">
+                <input type="file" accept="image/jpeg,image/png" @change="handleCreateFileChange" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                <img v-if="createForm.image_url" :src="createForm.image_url" class="w-20 h-20 object-cover rounded-lg shadow-md" alt="Product Image" />
+              </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <button type="button" @click="closeCreateModal" class="inline-flex items-center px-5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-red-200 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                Cancel
+              </button>
+              <button type="submit" :disabled="isSaving" class="inline-flex items-center justify-center px-6 py-2.5 border border-transparent shadow-md text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none">
+                <template v-if="isSaving">
+                  <svg class="animate-spin-slow h-5 w-5 text-white border-opacity-50 border-t-transparent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-75" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  <span class="ml-2 text-white transition-opacity duration-300 opacity-100">Saving...</span>
+                </template>
+                <template v-else>
+                  <span class="transition-opacity duration-300 opacity-100">Save Changes</span>
+                </template>
+              </button>
+            </div>
+          </form>
         </div>
-        <div v-if="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg border border-green-200 flex items-center gap-2">
-          <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-          </svg>
-          <span>{{ successMessage }}</span>
-        </div>
-        <form @submit.prevent="createProduct" enctype="multipart/form-data" class="space-y-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label for="create-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input id="create-name" v-model="createForm.name" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
-            </div>
-            <div>
-              <label for="create-price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-              <input id="create-price" v-model="createForm.price" type="number" step="0.01" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required />
-            </div>
-          </div>
-          <div>
-            <label for="create-content" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <textarea id="create-content" v-model="createForm.content" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label for="create-ram" class="block text-sm font-medium text-gray-700 mb-1">RAM</label>
-              <input id="create-ram" v-model="createForm.ram" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-            </div>
-            <div>
-              <label for="create-brand" class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-              <select id="create-brand" v-model="createForm.brand_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-                <option value="" disabled>Select a brand</option>
-                <option v-for="brand in brands" :key="brand.id" :value="brand.id">{{ brand.name }}</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
-            <div class="flex items-center space-x-4">
-              <input type="file" accept="image/jpeg,image/png" @change="handleCreateFileChange" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-              <img v-if="createForm.image_url" :src="createForm.image_url" class="w-20 h-20 object-cover rounded-lg shadow-md" alt="Product Image" />
-            </div>
-          </div>
-          <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-            <button type="button" @click="closeCreateModal" class="inline-flex items-center px-5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-red-200 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-              Cancel
-            </button>
-            <button type="submit" class="inline-flex items-center px-5 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-              Create Product
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
+    </transition>
 
-    <!-- Confirm delete -->
+    <!-- Create Brands Form -->
+    <transition name="fade-slide" appear mode="out-in">
+      <div v-if="showCreateBrand" class="fixed inset-0 bg-blue-100 bg-opacity-75 flex items-center justify-center z-50 p-4 sm:p-6">
+        <div class="bg-white p-20 rounded-xl shadow-2xl w-200 max-w-none h-120 transform transition-all duration-300 scale-100 opacity-100 ease-out">
+          <h2 class="text-2xl font-extrabold text-gray-900 mb-6 border-b pb-4 border-gray-200">Add Brand</h2>
+          <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg border border-red-200 flex items-center gap-2">
+            <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </div>
+          <div v-if="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg border border-green-200 flex items-center gap-2">
+            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span>{{ successMessage }}</span>
+          </div>
+          <form @submit.prevent="createBrand" enctype="multipart/form-data" class="space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="create-brand-name" class="block text-sm font-medium text-gray-700 mb-1">Brand Name</label>
+                <input type="text" v-model="createBr.name" id="create-brand-name" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+              </div>
+              <div>
+                <label for="image-brand" class="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                <div class="flex items-center space-x-4">
+                  <input type="file" accept="image/jpeg,image/png" @change="handleCreateBrandFileChange" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                  <img v-if="createBr.image_url" :src="createBr.image_url" class="w-20 h-20 object-cover rounded-lg shadow-md" alt="brand image">
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 col-span-full">
+              <button type="button" @click="closeCreateBrand" class="inline-flex items-center px-5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-red-200 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                Cancel
+              </button>
+              <button type="submit" :disabled="isSaving" class="inline-flex items-center justify-center px-6 py-2.5 border border-transparent shadow-md text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none">
+                <template v-if="isSaving">
+                  <svg class="animate-spin-slow h-5 w-5 text-white border-opacity-50 border-t-transparent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-75" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  <span class="ml-2 text-white transition-opacity duration-300 opacity-100">Saving...</span>
+                </template>
+                <template v-else>
+                  <span class="transition-opacity duration-300 opacity-100">Save Changes</span>
+                </template>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Confirm Delete -->
     <div v-if="showDeleteModal" class="fixed inset-0 bg-blue-100 bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100 max-w-md w-full mx-auto">
         <div class="p-8 text-center">
@@ -217,12 +287,12 @@
       </div>
     </div>
   </div>
-   
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+const headerHeight = ref(64);
 
 const products = ref([]);
 const brands = ref([]);
@@ -230,6 +300,8 @@ const showEditModal = ref(false);
 const showCreateModal = ref(false);
 const showDeleteModal = ref(false);
 const deleteProductId = ref(null);
+const showCreateBrand = ref(false);
+const isSaving = ref(false);
 
 const deleteProduct = async (id) => {
   deleteProductId.value = id;
@@ -252,6 +324,12 @@ const createForm = ref({
   price: '',
   ram: '',
   brand_id: '',
+  image: null,
+  image_url: ''
+});
+
+const createBr = ref({
+  name: '',
   image: null,
   image_url: ''
 });
@@ -294,13 +372,13 @@ const fetchBrands = async () => {
       }
     });
     brands.value = response.data.data || response.data;
-    console.log(response.data)
+    console.log(response.data);
   } catch (error) {
     console.error('Failed to fetch brands:', error);
     // Fallback to static brands if API fails
     brands.value = [
-      { id: 1, name: 'Apple', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' },
-      { id: 2, name: 'Samsung', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
+      { id: 1, name: 'Apple', image_url: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' },
+      { id: 2, name: 'Samsung', image_url: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
       // Add other brands with proper IDs
     ];
   }
@@ -337,6 +415,7 @@ const handleFileChange = (event) => {
     editForm.value.image_url = URL.createObjectURL(file); // Preview image
   }
 };
+// Handle create file
 const handleCreateFileChange = (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -344,9 +423,17 @@ const handleCreateFileChange = (event) => {
     createForm.value.image_url = URL.createObjectURL(file);
   }
 };
+const handleCreateBrandFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    createBr.value.image = file;
+    createBr.value.image_url = URL.createObjectURL(file);
+  }
+};
 
 // Update product
 const updateProduct = async () => {
+  isSaving.value = true;
   try {
     await initCsrf();
     const formData = new FormData();
@@ -376,10 +463,14 @@ const updateProduct = async () => {
     }
 
     successMessage.value = 'Product updated successfully!';
-    setTimeout(() => closeEditModal(), 1500);
+    setTimeout(() => closeEditModal(), 1000);
   } catch (error) {
     console.error('Failed to update product:', error);
     errorMessage.value = error.response?.data?.message || 'Failed to update product.';
+  } finally {
+    setTimeout(() => {
+      isSaving.value = false;
+    }, 1000);
   }
 };
 
@@ -389,8 +480,9 @@ const selectBrand = (brand) => {
   console.log('Selected brand:', brand);
 };
 
-// Create products
+// Create product
 const createProduct = async () => {
+  isSaving.value = true;
   try {
     const formData = new FormData();
     formData.append('name', createForm.value.name);
@@ -415,8 +507,42 @@ const createProduct = async () => {
   } catch (error) {
     console.error('Failed to create product:', error.response?.data);
     errorMessage.value = error.response?.data?.message || 'Failed to create product.';
+  } finally {
+    setTimeout(() => {
+      isSaving.value = false;
+    }, 1000);
   }
 };
+
+// Create brand
+const createBrand = async () => {
+  isSaving.value = true;
+  try {
+    const formData = new FormData();
+    formData.append('name', createBr.value.name);
+    if (createBr.value.image) {
+      formData.append('image', createBr.value.image);
+    }
+
+    const response = await axios.post('http://127.0.0.1:8000/api/brands', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Accept: 'application/json'
+      }
+    });
+    brands.value.push(response.data.brand);
+    successMessage.value = 'Brand created successfully!';
+    setTimeout(() => closeCreateBrand(), 1000);
+  } catch (error) {
+    console.error('Failed to create brand:', error.response?.data);
+    errorMessage.value = error.response?.data?.message || 'Failed to create brand';
+  } finally {
+    setTimeout(() => {
+      isSaving.value = false;
+    }, 1000);
+  }
+};
+
 const openCreateModal = () => {
   createForm.value = {
     name: '',
@@ -431,16 +557,32 @@ const openCreateModal = () => {
   errorMessage.value = '';
   successMessage.value = '';
 };
+
+const openCreateBrand = () => {
+  createBr.value = {
+    name: '',
+    image: null,
+    image_url: ''
+  };
+  showCreateBrand.value = true;
+  errorMessage.value = '';
+  successMessage.value = '';
+};
+
 const closeCreateModal = () => {
   showCreateModal.value = false;
   createForm.value = { name: '', content: '', price: '', ram: '', brand_id: '', image: null, image_url: '' };
 };
 
+const closeCreateBrand = () => {
+  showCreateBrand.value = false;
+  createBr.value = { name: '', image: null, image_url: '' };
+};
+
 // Delete product
 const confirmDelete = async () => {
   try {
-    await initCsrf(); // add this line
-
+    await initCsrf();
     await axios.delete(`http://127.0.0.1:8000/api/products/${deleteProductId.value}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('sanctum_token')}`,
@@ -468,9 +610,66 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-}
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* Animation */
+  .fade-slide-enter-active, .fade-slide-leave-active {
+    transition: all 0.4s ease;
+  }
+  .fade-slide-enter-from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .fade-slide-enter-to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-slide-leave-from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  /* In your CSS file (e.g., global.css or tailwind.css) */
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 1.5s linear infinite; /* Slower animation */
+  }
+
+  .ecommerce-page {
+    height: 100%;
+  }
+
+  /* Optional: Smooth scrolling */
+  .ecommerce-page::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .ecommerce-page::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .ecommerce-page::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  .ecommerce-page::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 </style>
